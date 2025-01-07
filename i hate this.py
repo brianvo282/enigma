@@ -33,9 +33,9 @@ reflector = {
 }
 
 # Function to rotate the rotor
-def rotate_rotor(rotor):
+def rotate_rotor(rotor, rotor_num):
     global pos1, pos2, pos3
-    if rotor == rotor1:
+    if rotor_num == 1:
         pos1 += 1
         if pos1 > 26:
             pos1 = 1
@@ -45,25 +45,23 @@ def rotate_rotor(rotor):
                 pos3 += 1
                 if pos3 > 26:
                     pos3 = 1
-    elif rotor == rotor2:
+    elif rotor_num == 2:
         pos2 += 1
         if pos2 > 26:
             pos2 = 1
             pos3 += 1
             if pos3 > 26:
                 pos3 = 1
-    elif rotor == rotor3:
+    elif rotor_num == 3:
         pos3 += 1
         if pos3 > 26:
             pos3 = 1
 
-    rotor1label.config(text=str(pos1))  # Update rotor1 label text
-    rotor2label.config(text=str(pos2))
-    rotor3label.config(text=str(pos3))
+    update_rotors()
 
-def rotate_rotor_reversed(rotor):
+def rotate_rotor_reversed(rotor, rotor_num):
     global pos1, pos2, pos3
-    if rotor == rotor1:
+    if rotor_num == 1:
         pos1 -= 1
         if pos1 < 1:
             pos1 = 26
@@ -73,26 +71,31 @@ def rotate_rotor_reversed(rotor):
                 pos3 -= 1
                 if pos3 < 1:
                     pos3 = 26
-    elif rotor == rotor2:
+    elif rotor_num == 2:
         pos2 -= 1
         if pos2 < 1:
             pos2 = 26
             pos3 -= 1
             if pos3 < 1:
                 pos3 = 26
-    elif rotor == rotor3:
+    elif rotor_num == 3:
         pos3 -= 1
-        if pos3 < 0:
+        if pos3 < 1:
             pos3 = 26
 
-    rotor1label.config(text=str(pos1))  # Update rotor1 label text
+    update_rotors()
+
+def update_rotors():
+    # Update the rotor mappings based on the positions
+    global rotor1, rotor2, rotor3
+    rotor1 = {alphabet[i]: alphabet[(i + pos1 - 1) % 26] for i in range(26)}
+    rotor2 = {alphabet[i]: alphabet[(i + pos2 - 1) % 26] for i in range(26)}
+    rotor3 = {alphabet[i]: alphabet[(i + pos3 - 1) % 26] for i in range(26)}
+
+    # Update the rotor labels on the GUI
+    rotor1label.config(text=str(pos1))
     rotor2label.config(text=str(pos2))
     rotor3label.config(text=str(pos3))
-
-    rotor_values = list(rotor.values())
-    rotated_values = rotor_values[1:] + rotor_values[:1]
-    for i, key in enumerate(rotor.keys()):
-        rotor[key] = rotated_values[i]
 
 # Function to simulate Enigma machine
 def enigma_letter(letter):
@@ -115,27 +118,33 @@ rotor2label.place(relx=0.55, rely=0.5, anchor="center")
 rotor3label = tk.Label(root, text=str(pos3), bg="#c8c8ff", width=5, height=5, font=30)
 rotor3label.place(relx=0.5, rely=0.5, anchor="center")
 
-rotor1upbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor(rotor1))
-rotor1upbutton.place(relx = 0.6, rely = 0.4, anchor="center")
+# Buttons for rotor1 rotation (up and down)
+rotor1upbutton = tk.Button(root, bg="#c8c8ff", width=2, height=2, command=lambda: rotate_rotor(rotor1, 1))
+rotor1upbutton.place(relx=0.6, rely=0.4, anchor="center")
 
-rotor1downbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor_reversed(rotor1))
-rotor1downbutton.place(relx = 0.6, rely = 0.6, anchor="center")
+rotor1downbutton = tk.Button(root, bg="#c8c8ff", width=2, height=2, command=lambda: rotate_rotor_reversed(rotor1, 1))
+rotor1downbutton.place(relx=0.6, rely=0.6, anchor="center")
 
-rotor2upbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor(rotor2))
-rotor2upbutton.place(relx = 0.55, rely = 0.4, anchor="center")
+# Buttons for rotor2 rotation (up and down)
+rotor2upbutton = tk.Button(root, bg="#c8c8ff", width=2, height=2, command=lambda: rotate_rotor(rotor2, 2))
+rotor2upbutton.place(relx=0.55, rely=0.4, anchor="center")
 
-rotor2downbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor_reversed(rotor2))
-rotor2downbutton.place(relx = 0.55, rely = 0.6, anchor="center")
+rotor2downbutton = tk.Button(root, bg="#c8c8ff", width=2, height=2, command=lambda: rotate_rotor_reversed(rotor2, 2))
+rotor2downbutton.place(relx=0.55, rely=0.6, anchor="center")
 
+# Buttons for rotor3 rotation (up and down)
+rotor3upbutton = tk.Button(root, bg="#c8c8ff", width=2, height=2, command=lambda: rotate_rotor(rotor3, 3))
+rotor3upbutton.place(relx=0.5, rely=0.4, anchor="center")
 
+rotor3downbutton = tk.Button(root, bg="#c8c8ff", width=2, height=2, command=lambda: rotate_rotor_reversed(rotor3, 3))
+rotor3downbutton.place(relx=0.5, rely=0.6, anchor="center")
 
 # Function to handle button click in Set B
 def on_button_b_click(letter):
     highlighted_letter_b.set(letter)
     highlighted_letter_a.set(enigma_letter(letter))  # Show corresponding letter in Set A
-    rotate_rotor(rotor1)
+    rotate_rotor(rotor1, 1)
     light_up_set_a_button(enigma_letter(letter))  # Light up corresponding button in Set A
-
 
 # Function to light up the corresponding button in Set A
 def light_up_set_a_button(transformed_letter):
@@ -160,7 +169,6 @@ for i, letter in enumerate(alphabet):
                        bg=button_color)
     button.grid(row=i // 7, column=i % 7, padx=5, pady=5)
     buttons_set_a[letter] = button
-
 
 # Frame for Set B (A-Z)
 frame_b = tk.Frame(root)
