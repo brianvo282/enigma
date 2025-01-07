@@ -61,6 +61,34 @@ def rotate_rotor(rotor):
     rotor2label.config(text=str(pos2))
     rotor3label.config(text=str(pos3))
 
+def rotate_rotor_reversed(rotor):
+    global pos1, pos2, pos3
+    if rotor == rotor1:
+        pos1 -= 1
+        if pos1 < 1:
+            pos1 = 26
+            pos2 -= 1
+            if pos2 < 1:
+                pos2 = 26
+                pos3 -= 1
+                if pos3 < 1:
+                    pos3 = 26
+    elif rotor == rotor2:
+        pos2 -= 1
+        if pos2 < 1:
+            pos2 = 26
+            pos3 -= 1
+            if pos3 < 1:
+                pos3 = 26
+    elif rotor == rotor3:
+        pos3 -= 1
+        if pos3 < 0:
+            pos3 = 26
+
+    rotor1label.config(text=str(pos1))  # Update rotor1 label text
+    rotor2label.config(text=str(pos2))
+    rotor3label.config(text=str(pos3))
+
     rotor_values = list(rotor.values())
     rotated_values = rotor_values[1:] + rotor_values[:1]
     for i, key in enumerate(rotor.keys()):
@@ -86,6 +114,19 @@ rotor2label.place(relx=0.55, rely=0.5, anchor="center")
 
 rotor3label = tk.Label(root, text=str(pos3), bg="#c8c8ff", width=5, height=5, font=30)
 rotor3label.place(relx=0.5, rely=0.5, anchor="center")
+
+rotor1upbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor(rotor1))
+rotor1upbutton.place(relx = 0.6, rely = 0.4, anchor="center")
+
+rotor1downbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor_reversed(rotor1))
+rotor1downbutton.place(relx = 0.6, rely = 0.6, anchor="center")
+
+rotor2upbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor(rotor2))
+rotor2upbutton.place(relx = 0.55, rely = 0.4, anchor="center")
+
+rotor2downbutton = tk.Button(root, bg = "#c8c8ff", width= 2, height= 2, command = lambda : rotate_rotor_reversed(rotor2))
+rotor2downbutton.place(relx = 0.55, rely = 0.6, anchor="center")
+
 
 
 # Function to handle button click in Set B
