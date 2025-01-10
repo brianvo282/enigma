@@ -21,18 +21,18 @@ pos3 = 1
 
 colors = [
     "#FF0000",  # Red
+    "#FF4000",  # Slightly lighter orange
     "#FF7F00",  # Orange
-    "#FFFF00",  # Yellow
-    "#00FF00",  # Green
-    "#0000FF",  # Blue
-    "#4B0082",  # Indigo
-    "#8B00FF",  # Violet
-    "#FF4500",  # Orange-Red
-    "#FFD700",  # Gold
-    "#ADFF2F",  # Green-Yellow
-    "#00CED1",  # Dark Turquoise
-    "#8A2BE2",  # Blue-Violet
-    "#FF1493"   # Deep Pink
+    "#FFB000",  # Yellow
+    "#F4FF00",  # Bright Yellow
+    "#8CFF00",  # Lime
+    "#1FFF00",  # Bright Green
+    "#007D12",  # Green
+    "#00FFA0",  # Blue-Green
+    "#00DFFF",  # Bright Blue
+    "#0042FF",  # Blue
+    "#8000FF",  # Violet
+    "#FF00E8"   # Deep Pink
 ]
 num_of_conections = 0
 letter_to_bind1 = None
