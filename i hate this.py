@@ -341,6 +341,9 @@ rotor3upbutton.place(relx=0.4, rely=0.4, anchor="center")
 rotor3downbutton = tk.Button(root, bg="#c8c8ff", width=2, height=2, command=lambda: rotate_rotor_reversed(rotor3, 3))
 rotor3downbutton.place(relx=0.4, rely=0.6, anchor="center")
 
+plugboard_label = tk.Label(root, text = "Plugboard", font= 30)
+plugboard_label.place(relx=0.435, rely= 0.08, anchor="center")
+
 # Function to handle button click in Set B
 def on_button_b_click(letter):
     highlighted_letter_b.set(letter)
