@@ -287,17 +287,19 @@ def update_rotors_reversed(rotor, rotor_num):
 # Function to simulate Enigma machine   
 def enigma_letter(letter):
     print(letter)
-    step1 = rotor1.get(letter)
-    step2 = rotor2.get(step1)
-    step3 = rotor3.get(step2)
-    reflected = reflector.get(step3)
+    step1 = plugboard.get(letter)
+    step2 = rotor1.get(step1)
+    step3 = rotor2.get(step2)
+    step4 = rotor3.get(step3)
+    reflected = reflector.get(step4)
     rev1 = {value: key for key, value in rotor1.items()}
     rev2 = {value: key for key, value in rotor2.items()}
     rev3 = {value: key for key, value in rotor3.items()} 
-    step4 = rev3.get(reflected)
-    step5 = rev2.get(step4)
-    step6 = rev1.get(step5)
-    return step6
+    step5 = rev3.get(reflected)
+    step6 = rev2.get(step5)
+    step7 = rev1.get(step6)
+    step8 = plugboard.get(step7)
+    return step8
 
 frame_b = tk.Frame(root)
 frame_b.grid(row=2, column=0, padx=20, pady=20)
@@ -390,14 +392,12 @@ def on_plugboard_button_click(letter, button):
             plugboard[plugboard.get(letter_to_bind1)] = plugboard.get(letter_to_bind1)
             plugboard[letter_to_bind1] = letter_to_bind1
             letter_to_bind1 = None
-            print(plugboard)
             return
         print(letter_to_bind1)
         button_clicked.config(bg = "#808080")
     else:
         letter_to_bind2 = letter
         print(letter_to_bind2)
-        print(plugboard)
         if letter_to_bind1 == letter_to_bind2:
             print("same twice")
             button_clicked.config(bg = "#FFFFFF")
@@ -422,7 +422,6 @@ def on_plugboard_button_click(letter, button):
             plugboard[letter_to_bind2] = letter_to_bind1
             plugboard_buttons[letter_to_bind1].config(bg = colors[num_of_conections])
             plugboard_buttons[letter_to_bind2].config(bg = colors[num_of_conections])
-            print(plugboard)
             num_of_conections += 1
             print(num_of_conections)
             letter_to_bind1 = None
