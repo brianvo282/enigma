@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 # Initialize Tkinter root window
 root = tk.Tk()
@@ -17,13 +18,147 @@ pos1 = 1
 pos2 = 1
 pos3 = 1
 
+
+colors = [
+    "#FF0000",  # Red
+    "#FF7F00",  # Orange
+    "#FFFF00",  # Yellow
+    "#00FF00",  # Green
+    "#0000FF",  # Blue
+    "#4B0082",  # Indigo
+    "#8B00FF",  # Violet
+    "#FF4500",  # Orange-Red
+    "#FFD700",  # Gold
+    "#ADFF2F",  # Green-Yellow
+    "#00CED1",  # Dark Turquoise
+    "#8A2BE2",  # Blue-Violet
+    "#FF1493"   # Deep Pink
+]
+num_of_conections = 0
+letter_to_bind1 = None
+letter_to_bind2 = None
+
 # Rotor dictionaries
-rotor1 = {alphabet[i]: alphabet[(i + pos1) % 26] for i in range(26)}  # Simple shift by 1
-rotor2 = {alphabet[i]: alphabet[(i + pos2) % 26] for i in range(26)}  # Shift by 3
-rotor3 = {alphabet[i]: alphabet[(i + pos3) % 26] for i in range(26)}  # Shift by 5
+rotor1 = {
+ 'A': 'O',
+ 'B': 'Q',
+ 'C': 'H',
+ 'D': 'S',
+ 'E': 'C',
+ 'F': 'P',
+ 'G': 'B',
+ 'H': 'T',
+ 'I': 'M',
+ 'J': 'A',
+ 'K': 'K',
+ 'L': 'W',
+ 'M': 'Z',
+ 'N': 'G',
+ 'O': 'D',
+ 'P': 'R',
+ 'Q': 'F',
+ 'R': 'E',
+ 'S': 'Y',
+ 'T': 'N',
+ 'U': 'V',
+ 'V': 'X',
+ 'W': 'L',
+ 'X': 'I',
+ 'Y': 'U',
+ 'Z': 'J'
+}
+
+rotor2 = {
+ 'A': 'F',
+ 'B': 'E',
+ 'C': 'W',
+ 'D': 'Z',
+ 'E': 'O',
+ 'F': 'M',
+ 'G': 'U',
+ 'H': 'V',
+ 'I': 'X',
+ 'J': 'A',
+ 'K': 'L',
+ 'L': 'K',
+ 'M': 'Y',
+ 'N': 'D',
+ 'O': 'B',
+ 'P': 'Q',
+ 'Q': 'T',
+ 'R': 'J',
+ 'S': 'C',
+ 'T': 'R',
+ 'U': 'P',
+ 'V': 'S',
+ 'W': 'I',
+ 'X': 'G',
+ 'Y': 'H',
+ 'Z': 'N'
+}
+
+rotor3 = {
+ 'A': 'E',
+ 'B': 'F',
+ 'C': 'G',
+ 'D': 'P',
+ 'E': 'S',
+ 'F': 'M',
+ 'G': 'C',
+ 'H': 'N',
+ 'I': 'J',
+ 'J': 'I',
+ 'K': 'A',
+ 'L': 'Q',
+ 'M': 'V',
+ 'N': 'W',
+ 'O': 'Y',
+ 'P': 'D',
+ 'Q': 'L',
+ 'R': 'O',
+ 'S': 'X',
+ 'T': 'U',
+ 'U': 'Z',
+ 'V': 'B',
+ 'W': 'T',
+ 'X': 'R',
+ 'Y': 'H',
+ 'Z': 'K'
+}
+
 rev1 = {value: key for key, value in rotor1.items()}
 rev2 = {value: key for key, value in rotor2.items()}
 rev3 = {value: key for key, value in rotor3.items()}
+
+plugboard = {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "E": "E",
+    "F": "F",
+    "G": "G",
+    "H": "H",
+    "I": "I",
+    "J": "J",
+    "K": "K",
+    "L": "L",
+    "M": "M",
+    "N": "N",
+    "O": "O",
+    "P": "P",
+    "Q": "Q",
+    "R": "R",
+    "S": "S",
+    "T": "T",
+    "U": "U",
+    "V": "V",
+    "W": "W",
+    "X": "X",
+    "Y": "Y",
+    "Z": "Z"
+}
+
 
 reflector = {
     "A": "Z", "B": "Y", "C": "X", "D": "W", "E": "V", "F": "U", "G": "T", "H": "S",
@@ -38,86 +173,140 @@ def rotate_rotor(rotor, rotor_num):
     global pos1, pos2, pos3
     if rotor_num == 1:
         pos1 += 1
+        update_rotors(rotor, rotor_num)
         if pos1 > 26:
             pos1 = 1
+            update_rotors(rotor, rotor_num)
             pos2 += 1
+            update_rotors(rotor2, 2)
             if pos2 > 26:
                 pos2 = 1
+                update_rotors(rotor2, 2)
                 pos3 += 1
+                update_rotors(rotor3, 3)
                 if pos3 > 26:
                     pos3 = 1
+                    update_rotors(rotor3, 3)
     elif rotor_num == 2:
         pos2 += 1
+        update_rotors(rotor, rotor_num)
         if pos2 > 26:
             pos2 = 1
+            update_rotors(rotor2, 2)
             pos3 += 1
+            update_rotors(rotor3, 3)
             if pos3 > 26:
                 pos3 = 1
+                update_rotors(rotor3, 3)
     elif rotor_num == 3:
         pos3 += 1
+        update_rotors(rotor3, 3)
         if pos3 > 26:
             pos3 = 1
+            update_rotors(rotor3, 3)
 
-    update_rotors()
 
 def rotate_rotor_reversed(rotor, rotor_num):
     global pos1, pos2, pos3
     if rotor_num == 1:
         pos1 -= 1
+        update_rotors_reversed(rotor, rotor_num)
         if pos1 < 1:
             pos1 = 26
+            update_rotors_reversed(rotor1, 1)
             pos2 -= 1
+            update_rotors_reversed(rotor2, 2)
             if pos2 < 1:
                 pos2 = 26
+                update_rotors_reversed(rotor2, 2)
                 pos3 -= 1
+                update_rotors_reversed(rotor3, 3)
                 if pos3 < 1:
                     pos3 = 26
+                    update_rotors_reversed(rotor3, 3)
     elif rotor_num == 2:
         pos2 -= 1
+        update_rotors_reversed(rotor, rotor_num)
         if pos2 < 1:
             pos2 = 26
+            update_rotors_reversed(rotor2, 2)
             pos3 -= 1
+            update_rotors_reversed(rotor3, 3)
             if pos3 < 1:
                 pos3 = 26
+                update_rotors_reversed(rotor3, 3)
     elif rotor_num == 3:
         pos3 -= 1
+        update_rotors_reversed(rotor3, 3)
         if pos3 < 1:
             pos3 = 26
+            update_rotors_reversed(rotor3, 3)
 
-    update_rotors()
-
-def update_rotors():
+def update_rotors(rotor, rotor_num):
     # Update the rotor mappings based on the positions
     global rotor1, rotor2, rotor3
-    rotor1 = {alphabet[i]: alphabet[(i + pos1 - 1) % 26] for i in range(26)}
-    rotor2 = {alphabet[i]: alphabet[(i + pos2 - 1) % 26] for i in range(26)}
-    rotor3 = {alphabet[i]: alphabet[(i + pos3 - 1) % 26] for i in range(26)}
+    keys = list(rotor.keys())
+    values = list(rotor.values())
+
+    temp = values[1:] + [values[0]]
+
+    for keys, new_value in zip(keys, temp):
+        rotor[keys] = new_value
+
+    rev1 = {value: key for key, value in rotor1.items()}
+    rev2 = {value: key for key, value in rotor2.items()}
+    rev3 = {value: key for key, value in rotor3.items()}    
+
 
     # Update the rotor labels on the GUI
     rotor1label.config(text=str(pos1))
     rotor2label.config(text=str(pos2))
     rotor3label.config(text=str(pos3))
 
-# Function to simulate Enigma machine
+def update_rotors_reversed(rotor, rotor_num):
+    # Update the rotor mappings based on the positions
+    global rotor1, rotor2, rotor3
+    keys = list(rotor.keys())
+    values = list(rotor.values())
+
+    temp = [values[-1]] + values[:-1]
+
+    for keys, new_value in zip(keys, temp):
+        rotor[keys] = new_value
+
+    rev1 = {value: key for key, value in rotor1.items()}
+    rev2 = {value: key for key, value in rotor2.items()}
+    rev3 = {value: key for key, value in rotor3.items()}
+
+
+    # Update the rotor labels on the GUI
+    rotor1label.config(text=str(pos1))
+    rotor2label.config(text=str(pos2))
+    rotor3label.config(text=str(pos3))
+
+# Function to simulate Enigma machine   
 def enigma_letter(letter):
-    print("start")
+    print(letter)
     step1 = rotor1.get(letter)
-    print(step1)
     step2 = rotor2.get(step1)
-    print(step2)
-    print(rotor3)
     step3 = rotor3.get(step2)
-    print(step3)
     reflected = reflector.get(step3)
-    print(reflected)
-    print("reflected")
+    rev1 = {value: key for key, value in rotor1.items()}
+    rev2 = {value: key for key, value in rotor2.items()}
+    rev3 = {value: key for key, value in rotor3.items()} 
     step4 = rev3.get(reflected)
-    print(step4)
     step5 = rev2.get(step4)
-    print(step5)
     step6 = rev1.get(step5)
-    print(step6)
     return step6
+
+frame_b = tk.Frame(root)
+frame_b.grid(row=2, column=0, padx=20, pady=20)
+
+for i, letter in enumerate(alphabet):
+    button = tk.Button(frame_b, text=letter, font=font, width=5, height=2,
+                       bg=button_color, activebackground=hover_color,
+                       command=lambda l=letter: on_button_b_click(l))
+    button.grid(row=i // 7, column=i % 7, padx=5, pady=5)
 
 # Label to display the rotor1 position
 rotor1label = tk.Label(root, text=str(pos1), bg="#c8c8ff", width=5, height=5, font=30)
@@ -182,15 +371,72 @@ for i, letter in enumerate(alphabet):
     buttons_set_a[letter] = button
 
 # Frame for Set B (A-Z)
-frame_b = tk.Frame(root)
-frame_b.grid(row=2, column=0, padx=20, pady=20)
 
+
+plugboard_frame = tk.Frame(root)
+plugboard_frame.place(relx=0.4, rely=0.1)
+
+def on_plugboard_button_click(letter, button):
+    global letter_to_bind1, letter_to_bind2, num_of_conections
+    button_clicked = plugboard_buttons[letter]
+    
+    if letter_to_bind1 == None:
+        letter_to_bind1 = letter
+        if plugboard[letter_to_bind1] != letter_to_bind1:
+            print("deselect")
+            num_of_conections -= 1
+            plugboard_buttons[letter_to_bind1].config(bg = "#FFFFFF")
+            plugboard_buttons[plugboard.get(letter_to_bind1)].config(bg = "#FFFFFF")
+            plugboard[plugboard.get(letter_to_bind1)] = plugboard.get(letter_to_bind1)
+            plugboard[letter_to_bind1] = letter_to_bind1
+            letter_to_bind1 = None
+            print(plugboard)
+            return
+        print(letter_to_bind1)
+        button_clicked.config(bg = "#808080")
+    else:
+        letter_to_bind2 = letter
+        print(letter_to_bind2)
+        print(plugboard)
+        if letter_to_bind1 == letter_to_bind2:
+            print("same twice")
+            button_clicked.config(bg = "#FFFFFF")
+            letter_to_bind1 = None
+            letter_to_bind2 = None
+        elif plugboard[letter_to_bind1] != letter_to_bind1 or plugboard[letter_to_bind2] != letter_to_bind2:
+            print("attempted to pair an already paired")
+            if plugboard[letter_to_bind1] != letter_to_bind1:
+                print("hi mom")
+                plugboard_buttons[letter_to_bind1].config(bg = colors[num_of_conections])
+                letter_to_bind1 = None
+                letter_to_bind2 = None
+            else:
+                print("hi dad")
+                plugboard_buttons[letter_to_bind2].config(bg = colors[num_of_conections])
+                plugboard_buttons[letter_to_bind1].config(bg = "#FFFFFF")
+                letter_to_bind1 = None
+                letter_to_bind2 = None
+        elif plugboard[letter_to_bind1] == letter_to_bind1:
+            print("paired")
+            plugboard[letter_to_bind1] = letter_to_bind2
+            plugboard[letter_to_bind2] = letter_to_bind1
+            plugboard_buttons[letter_to_bind1].config(bg = colors[num_of_conections])
+            plugboard_buttons[letter_to_bind2].config(bg = colors[num_of_conections])
+            print(plugboard)
+            num_of_conections += 1
+            print(num_of_conections)
+            letter_to_bind1 = None
+            letter_to_bind2 = None
+            
 # Generate buttons for Set B (A-Z)
+
+plugboard_buttons = {}
 for i, letter in enumerate(alphabet):
-    button = tk.Button(frame_b, text=letter, font=font, width=5, height=2,
-                       bg=button_color, activebackground=hover_color,
-                       command=lambda l=letter: on_button_b_click(l))
-    button.grid(row=i // 7, column=i % 7, padx=5, pady=5)
+    button = tk.Button(plugboard_frame, text=letter, font=("Arial", 14), width=4, height=2,
+                    command=lambda l=letter: on_plugboard_button_click(l, button))
+    button.grid(row=i // 13, column=i % 13, padx=5, pady=5)
+    plugboard_buttons[letter] = button
+    
 
 # Run the Tkinter main loop
 root.mainloop()
